@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Visite>
  *
+ * 
  * @method Visite|null find($id, $lockMode = null, $lockVersion = null)
  * @method Visite|null findOneBy(array $criteria, array $orderBy = null)
  * @method Visite[]    findAll()
@@ -71,6 +72,18 @@ class VisiteRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getResult();
         }
+    }
+    /**
+     * @param type $champ
+     * @param type $ordre
+     * @return Visite[] 
+     */
+    public function findOrderBy($champ, $ordre): array{
+        return $this->createQueryBuilder('v')
+                ->orderBy('v.'.$champ, $ordre)
+                ->setMaxResults(2)
+                ->getQuery()
+                ->getResult();
     }
 
 //    /**
