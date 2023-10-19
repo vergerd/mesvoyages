@@ -43,7 +43,7 @@ class ContactController extends AbstractController{
     {
         $email = (new Email())
             ->from($contact->getEmail())
-            ->to('contact@mesvoyages.com')            
+            ->to('dam33v@gmail.com')            
             ->subject('Message du site de voyages')            
             ->html($this->renderView(
                     'pages/_email.html.twig', [
