@@ -1,12 +1,14 @@
 {% extends "baseadmin.html.twig" %}
 
 {% block body %}
+             
     <p class="text-end">
         <a href="{{ path('admin.voyage.ajout') }}" class="btn btn-primary">
             Ajouter une nouvelle visite
         </a>
-    </p>
+    </p>           
     <table class="table table-striped">
+        <caption>Liste des voyages (ville, pays, date et boutons pour modifier ou supprimer)</caption>
         <thead>
             <tr>
                 <th>
@@ -32,15 +34,18 @@
                         </h5>
                     </td>
                     <td>
+                        {{ visite.pays }}
+                    </td>
+                    <td>
                         {{ visite.datecreationstring }}
                     </td>
                     <td>
                         <a href="{{ path('admin.voyage.edit', {id:visite.id}) }}" class="btn btn-secondary">Editer</a>
-                        <a href="{{ path('admin.voyage.suppr', {id:visite.id}) }}" class="btn btn-danger" onclick="return confirm('Etes-vous sûr de vouloir supprimer {{visite.ville}} ?')">Supprimer</a>
+                        <a href="{{ path('admin.voyage.suppr', {id:visite.id}) }}" class="btn btn-danger" onclick="return confirm('Etes-vous sûr de vouloir supprimer {{ visite.ville }} ?')">Supprimer</a>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
-    </table>                
- 
-{%  endblock %}
+    </table>
+            
+{% endblock %}

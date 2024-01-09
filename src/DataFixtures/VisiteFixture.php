@@ -18,12 +18,12 @@ class VisiteFixture extends Fixture
             $visite = new Visite();
             $visite->setVille($faker->city)
                     ->setPays($faker->country)
-                    ->setDatecreation($faker->dateTimeBetween('-10 years', 'now'))
-                    ->setTempmin($faker->numberBetween(-20,10))
-                    ->setTempmax($faker->numberBetween(10,40))
-                    ->setNote($faker->numberBetween(0,20))
-                    ->setAvis($faker->sentences(4,true));
-            // enregistrement de l'objet
+                    ->setDatecreation(($faker->dateTimeBetween('-10 years', 'now')))
+                    ->setTempmin($faker->numberBetween(-20, 10))
+                    ->setTempmax($faker->numberBetween(10, 40))
+                    ->setNote($faker->numberBetween(0, 20))
+                    ->setAvis($faker->sentences(4, true));
+            // enregisrement de l'objet
             $manager->persist($visite);
         }
         $manager->flush();

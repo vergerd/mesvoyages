@@ -21,22 +21,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class Visite
 {
     /**
-     * 
-     * @Vich\UploadableField(mapping="visites", fileNameProperty="imageName")
-     * 
-     * @var File|null
-     */
-    private $imageFile;
-    
-    /**
-     * 
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * 
-     * @var string|null
-     */
-    private $imageName;
-    
-    /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -55,6 +39,7 @@ class Visite
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Assert\LessThanOrEqual("now")
      */
     private $datecreation;
 
@@ -86,10 +71,26 @@ class Visite
     private $environnements;
 
     /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     * 
+     * @Vich\UploadableField(mapping="visites", fileNameProperty="imageName")
+     * 
+     * @var File|null
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @var string|null
+     */
+    private $imageName;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updated_at;
-
+    
     public function __construct()
     {
         $this->environnements = new ArrayCollection();
@@ -128,21 +129,21 @@ class Visite
     {
         return $this->datecreation;
     }
-    
-    public function getDatecreationString() : string
-    {
-        if($this->datecreation == null){
-            return"";
-        }else {
-            return $this->datecreation->format('d/m/Y');
-        }
-    }
 
     public function setDatecreation(?DateTimeInterface $datecreation): self
     {
         $this->datecreation = $datecreation;
 
         return $this;
+    }
+    
+    public function getDatecreationString(): string
+    {
+        if($this->datecreation == null){
+            return "";
+        }else{
+            return $this->datecreation->format('d/m/Y');
+        }
     }
 
     public function getNote(): ?int
@@ -216,6 +217,7 @@ class Visite
 
         return $this;
     }
+    
     function getImageFile(): ?File {
         return $this->imageFile;
     }
@@ -223,11 +225,11 @@ class Visite
     function getImageName(): ?string {
         return $this->imageName;
     }
-    
-    function setImageFile(?File $imageFile): self {
+
+    function setImageFile(?File $imageFile) {
         $this->imageFile = $imageFile;
-        if ($this->imageFile instanceof UploadedFile) {
-            $this ->updated_at = new DateTime('now');
+        if($this->imageFile instanceof UploadedFile){
+            $this->updated_at = new DateTime('now');
         }
         return $this;
     }
@@ -248,28 +250,26 @@ class Visite
 
         return $this;
     }
+
     /**
      * @Assert\Callback
      * @param ExecutionContextInterface $context
      */
-    public function validate(ExecutionContextInterface $context)
-    {        
+    public function validate(ExecutionContextInterface $context){
         $image = $this->getImageFile();
         if($image != null && $image != ""){
             $tailleImage = @getimagesize($image);
-            if(!($tailleImage==false)){
+            if($tailleImage){
                 if($tailleImage[0]>1300 || $tailleImage[1]>1300){
                     $context->buildViolation("Cette image est trop grande (1300x1300 max)")
-                        ->atPath('imageFile')
-                        ->addViolation();
-                }            
+                            ->atPath('imageFile')
+                            ->addViolation();
+                }
             }else{
                 $context->buildViolation("Ce n'est pas une image")
-                    ->atPath('imageFile')
-                    ->addViolation();
+                        ->atPath('imageFile')
+                        ->addViolation();
             }
         }
     }
-
-
 }

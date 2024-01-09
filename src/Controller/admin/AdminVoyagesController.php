@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller\admin;
 
 use App\Entity\Visite;
@@ -10,80 +9,93 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 /**
  * Description of AdminVoyagesController
  *
- * @author Damien
+ * @author emds
  */
-class AdminVoyagesController extends AbstractController{
+class AdminVoyagesController extends AbstractController {
+
+    const PAGE_ADMIN_VOYAGES = "admin/admin.voyages.html.twig";
+    const PAGE_ADMIN_VOYAGE_EDIT = "admin/admin.voyage.edit.html.twig";
+    const PAGE_ADMIN_VOYAGE_AJOUT = "admin/admin.voyage.ajout.html.twig";
+    const ROUTE_ADMIN_VOYAGES = "admin.voyages";
+    
     /**
-     * 
+     *
      * @var VisiteRepository
      */
     private $repository;
+    
     /**
-     * 
+     *
      * @param VisiteRepository $repository
      */
-    public function __construct(VisiteRepository $repository){
+    public function __construct(VisiteRepository $repository) {
         $this->repository = $repository;
     }
+    
     /**
      * @Route("/admin", name="admin.voyages")
      * @return Response
      */
-    public function index() : Response{
+    public function index(): Response{
         $visites = $this->repository->findAllOrderBy('datecreation', 'DESC');
-        return $this->render("admin/admin.voyages.html.twig", [
+        return $this->render(self::PAGE_ADMIN_VOYAGES, [
             'visites' => $visites
         ]);
     }
+    
     /**
      * @Route("/admin/suppr/{id}", name="admin.voyage.suppr")
-     * @param int $id
+     * @param Visite $visite
      * @return Response
      */
-    public function suppr(int $id): Response{
-        $visite = $this->repository->find($id);
+    public function suppr(Visite $visite): Response{
         $this->repository->remove($visite, true);
-        return $this->redirectToRoute('admin.voyages');
+        return $this->redirectToRoute(self::ROUTE_ADMIN_VOYAGES);
     }
+    
     /**
      * @Route("/admin/edit/{id}", name="admin.voyage.edit")
-     * @param int $id
-     * àparam Request $request
+     * @param Visite $visite
+     * @param Request $request
      * @return Response
      */
-    public function edit(int $id, Request $request) : Response{  
-        $visite = $this->repository->find($id);
+    public function edit(Visite $visite, Request $request): Response{
         $formVisite = $this->createForm(VisiteType::class, $visite);
+
         $formVisite->handleRequest($request);
         if($formVisite->isSubmitted() && $formVisite->isValid()){
-            $this->repository->add($visite,true); 
-            return $this->redirectToRoute('admin.voyages');
+            $this->repository->add($visite, true);
+            return $this->redirectToRoute(self::ROUTE_ADMIN_VOYAGES);
         }
-        return $this->render("admin/admin.voyage.edit.html.twig", [
+
+        return $this->render(self::PAGE_ADMIN_VOYAGE_EDIT, [
             'visite' => $visite,
             'formvisite' => $formVisite->createView()
         ]);
     }
+    
     /**
      * @Route("/admin/ajout", name="admin.voyage.ajout")
      * @param Request $request
      * @return Response
      */
-    public function ajout (Request $request) : Response{
-        $visite = new Visite;
+    public function ajout(Request $request): Response{
+        $visite = new Visite();
         $formVisite = $this->createForm(VisiteType::class, $visite);
+
         $formVisite->handleRequest($request);
         if($formVisite->isSubmitted() && $formVisite->isValid()){
-            $this->repository->add($visite,true); 
-            return $this->redirectToRoute('admin.voyages');
+            $this->repository->add($visite, true);
+            return $this->redirectToRoute(self::ROUTE_ADMIN_VOYAGES);
         }
-        return $this->render("admin/admin.voyage.ajout.html.twig", [
+
+        return $this->render(self::PAGE_ADMIN_VOYAGE_AJOUT, [
             'visite' => $visite,
             'formvisite' => $formVisite->createView()
         ]);
-    }    
+    }
+    
 }

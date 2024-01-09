@@ -9,6 +9,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class LoginController extends AbstractController
 {
+    const PAGE_LOGIN = "login/index.html.twig";
+    
     /**
      * @Route("/login", name="login")
      */
@@ -16,16 +18,17 @@ class LoginController extends AbstractController
     {
         // récupération éventuelle de l'erreur
         $error = $authenticationUtils->getLastAuthenticationError();
-        // récupération éventuelle du dernier nom de login utilisé
+        // récupération éventuelledu dernier nom de login utilisé
         $lastUsername = $authenticationUtils->getLastUsername();
-        return $this->render('login/index.html.twig', [
+        return $this->render(self::PAGE_LOGIN, [
             'last_username' => $lastUsername,
-            'error'         => $error
+            'error' => $error
         ]);
     }
+    
     /**
-    * @Route("/logout", name="logout")
-    */
+     * @Route("/logout", name="logout")
+     */
     public function logout(){
 
     }

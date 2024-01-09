@@ -1,5 +1,10 @@
-<html>
-    <body>       
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>email</title>
+    </head>    
+    <body>
         <p>
             Nom : {{ contact.nom }}
         </p>
@@ -7,7 +12,7 @@
             Email : {{ contact.email }}
         </p>
         <p>
-            Message : {{ contact.message|nl2br }}
-        </p>        
+            {{ contact.message|nl2br }}
+        </p>
     </body>
 </html>
