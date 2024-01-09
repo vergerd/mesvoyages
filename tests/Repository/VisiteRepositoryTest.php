@@ -14,14 +14,16 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @author Damien
  */
 class VisiteRepositoryTest extends KernelTestCase {
+    const VILLE = "New York";
+    const PAYS = "USA";
     /**
      * Création d'une instance de Visite avec ville, pays et dateCreation
      * @return Visite
      */
     public function newVisite(): Visite{
         $visite = (new Visite())
-                ->setVille("New York")
-                ->setPays("USA")
+                ->setVille(self::VILLE)
+                ->setPays(self::PAYS)
                 ->setDatecreation(new DateTime("now"));
         return $visite;
     }
@@ -58,10 +60,10 @@ class VisiteRepositoryTest extends KernelTestCase {
         $repository = $this->recupRepository();
         $visite = $this->newVisite();
         $repository->add($visite, true);
-        $visites = $repository->findByEqualValue("ville", "New York");
+        $visites = $repository->findByEqualValue("ville", self::VILLE);
         $nbVisites =  count($visites);
         $this->assertEquals(1, $nbVisites);
-        $this->assertEquals("New York", $visites[0]->getVille());
+        $this->assertEquals(self::VILLE, $visites[0]->getVille());
     }
 }
 

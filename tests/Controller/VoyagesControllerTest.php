@@ -11,14 +11,15 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Damien
  */
 class VoyagesControllerTest extends WebTestCase{
+    const CHEMIN_VOYAGES = '/voyages';
     public function testAccesPage(){
         $client = static::createClient();
-        $client->request('GET', '/voyages');
+        $client->request('GET', self::CHEMIN_VOYAGES);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
     public function testContenuPage(){
         $client = static::createClient();
-        $crawler = $client->request('GET', '/voyages');        
+        $crawler = $client->request('GET', self::CHEMIN_VOYAGES);        
         $this ->assertSelectorTextContains('h1',  'Mes voyages');
         $this ->assertSelectorTextContains('th', 'Ville');
         $this ->assertCOunt(4, $crawler->filter('th'));
@@ -26,7 +27,7 @@ class VoyagesControllerTest extends WebTestCase{
     }
     public function testLinkVille(){
         $client = static::createClient();
-        $client ->request('GET,', '/voyages');
+        $client ->request('GET,', self::CHEMIN_VOYAGES);
         // clic sur un lien (le nom de la ville)
         $client->clickLink('Blot');
         // récupération du résultat du clic
@@ -39,7 +40,7 @@ class VoyagesControllerTest extends WebTestCase{
     }
     public function testFiltreVIlle(){
         $client = static::createClient();
-        $client->request('GET', '/voyages');
+        $client->request('GET', self::CHEMIN_VOYAGES);
         // simulation de la soumission du formulaire
         $crawler = $client->submitForm('filter', [
             'recherche' => 'Blot'
